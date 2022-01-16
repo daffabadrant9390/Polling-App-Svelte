@@ -1,21 +1,33 @@
 <script>
   import Card from "../shared/Card.svelte";
+  import Button from "../shared/Button.svelte";
   import { createEventDispatcher } from "svelte";
+  import { tweened } from "svelte/motion";
   export let poll;
 
   const dispatch = createEventDispatcher();
 
   // Create total votes variable using reactive
   $: totalVotes = poll.votesA + poll.votesB;
-  $: percentA = Math.floor((100 / totalVotes) * poll.votesA);
-  $: percentB = Math.floor((100 / totalVotes) * poll.votesB);
+  // Since when the poll.votesA and totalVotes is 0, we got NaN. So to avoid NaN, give OR statement to 0
+  $: percentA = Math.floor((100 / totalVotes) * poll.votesA) || 0;
+  $: percentB = Math.floor((100 / totalVotes) * poll.votesB) || 0;
 
-  console.log(`Total votes : ${totalVotes}`);
-  console.log(`Percent A : ${percentA}%`);
-  console.log(`Percent B : ${percentB}%`);
+  // Tweened Motion
+  const tweenedA = tweened(0);
+  const tweenedB = tweened(0);
+
+  $: tweenedA.set(percentA);
+  $: tweenedB.set(percentB);
+  $: console.log($tweenedA);
 
   const incrementVotes = (id, option) => {
     dispatch("incrementVotes", { id, option });
+  };
+
+  const deletePoll = (id) => {
+    console.log(id);
+    dispatch("deletePoll", id);
   };
 </script>
 
@@ -24,19 +36,23 @@
     <h3>{poll.question}</h3>
     <p>Total votes : {totalVotes}</p>
     <div class="answer" on:click={() => incrementVotes(poll.id, "A")}>
-      <div class="percent percent-a" style="width:{percentA}%" />
+      <div class="percent percent-a" style="width:{$tweenedA}%" />
       <span>{poll.answerA} ({poll.votesA})</span>
     </div>
     <div class="answer" on:click={() => incrementVotes(poll.id, "B")}>
-      <div class="percent percent-b" style="width:{percentB}%" />
+      <div class="percent percent-b" style="width:{$tweenedB}%" />
       <span>{poll.answerB} ({poll.votesB})</span>
+    </div>
+    <div class="delete-btn">
+      <Button style="danger" on:click={() => deletePoll(poll.id)}
+        >Delete Poll</Button
+      >
     </div>
   </div>
 </Card>
 
 <style>
   h3 {
-    font-weight: normal;
     font-size: 20px;
     margin-bottom: 4px;
     color: #555;
@@ -50,7 +66,7 @@
 
   .answer {
     background-color: #f4f4f4;
-    margin-bottom: 4px;
+    margin-bottom: 16px;
     cursor: pointer;
     position: relative;
   }
@@ -79,5 +95,10 @@
   .percent-b {
     border-left: 4px solid #45c496;
     background-color: rgba(69, 196, 150, 0.2);
+  }
+
+  .delete-btn {
+    margin-top: 24px;
+    text-align: center;
   }
 </style>

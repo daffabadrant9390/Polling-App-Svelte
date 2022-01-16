@@ -1,18 +1,20 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-  export let items;
-  export let currentItem;
-  const dispatch = createEventDispatcher();
-  const handleCurrentItem = (e) => {
-    dispatch("updateCurrent", e);
+  import CurrentItemStore from "../stores/CurrentItemStore";
+  import TabsStore from "../storeS/TabsStore";
+
+  const updateCurrentItem = (e) => {
+    CurrentItemStore.update((current) => {
+      current = e;
+      return current;
+    });
   };
 </script>
 
 <div class="tabs">
   <ul>
-    {#each items as item}
-      <li on:click={handleCurrentItem(item)}>
-        <div class:active={item === currentItem}>{item}</div>
+    {#each $TabsStore as item}
+      <li on:click={updateCurrentItem(item)}>
+        <div class:active={item === $CurrentItemStore}>{item}</div>
       </li>
     {/each}
   </ul>

@@ -1,12 +1,23 @@
 <script>
   import Button from "../shared/Button.svelte";
   import { v4 as uuidv4 } from "uuid";
-  import { createEventDispatcher } from "svelte";
-  const dispatch = createEventDispatcher();
+  import { onDestroy } from "svelte";
+  import PollStore from "../stores/PollStore.js";
+  import CurrentItemStore from "../stores/CurrentItemStore";
+
   let disabled = false;
   let valid = false;
   let field = { question: "", answerA: "", answerB: "" };
   let error = { errQuestion: "", errAnswerA: "", errAnswerB: "" };
+  let polls = [];
+
+  // subscribe PollStore
+  const unsub = PollStore.subscribe((data) => (polls = data));
+  // unsubscribe PollStore when the component is destroyed
+  onDestroy(() => {
+    console.log("Component Destroyed");
+    unsub();
+  });
 
   const handleSubmitForm = () => {
     valid = true;
@@ -42,7 +53,16 @@
         votesB: 0,
         id: uuidv4(),
       };
-      dispatch("addNewPoll", poll);
+
+      // Add the data
+      PollStore.update((currentPoll) => {
+        return [poll, ...currentPoll];
+      });
+
+      CurrentItemStore.update((current) => {
+        current = "Current Polls";
+        return current;
+      });
     }
   };
 </script>

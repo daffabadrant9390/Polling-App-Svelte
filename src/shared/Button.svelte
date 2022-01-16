@@ -1,10 +1,10 @@
 <script>
   export let style = "primary";
   export let type = "button";
-  export let disabled = true;
+  export let disabled = false;
 </script>
 
-<button class={style} {type} {disabled}>
+<button class={style} {type} {disabled} on:click>
   <slot />
 </button>
 
@@ -24,6 +24,10 @@
   }
   .secondary {
     background-color: rgb(78, 78, 78);
+  }
+
+  .danger {
+    background-color: rgb(250, 58, 58);
   }
   button:disabled {
     background-color: rgb(155, 155, 155);
