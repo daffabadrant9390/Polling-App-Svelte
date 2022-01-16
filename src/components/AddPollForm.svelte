@@ -1,7 +1,6 @@
 <script>
   import Button from "../shared/Button.svelte";
   import { v4 as uuidv4 } from "uuid";
-  import { onDestroy } from "svelte";
   import PollStore from "../stores/PollStore.js";
   import CurrentItemStore from "../stores/CurrentItemStore";
 
@@ -9,15 +8,6 @@
   let valid = false;
   let field = { question: "", answerA: "", answerB: "" };
   let error = { errQuestion: "", errAnswerA: "", errAnswerB: "" };
-  let polls = [];
-
-  // subscribe PollStore
-  const unsub = PollStore.subscribe((data) => (polls = data));
-  // unsubscribe PollStore when the component is destroyed
-  onDestroy(() => {
-    console.log("Component Destroyed");
-    unsub();
-  });
 
   const handleSubmitForm = () => {
     valid = true;
