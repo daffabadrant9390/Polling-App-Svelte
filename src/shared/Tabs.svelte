@@ -1,6 +1,6 @@
 <script>
   import CurrentItemStore from "../stores/CurrentItemStore";
-  import TabsStore from "../storeS/TabsStore";
+  import TabsStore from "../stores/TabsStore";
 
   const updateCurrentItem = (e) => {
     CurrentItemStore.update((current) => {

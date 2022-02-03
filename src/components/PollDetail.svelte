@@ -19,7 +19,7 @@
 
   $: tweenedA.set(percentA);
   $: tweenedB.set(percentB);
-  $: console.log($tweenedA);
+  // $: console.log($tweenedA);
 
   const incrementVotes = (id, option) => {
     dispatch("incrementVotes", { id, option });

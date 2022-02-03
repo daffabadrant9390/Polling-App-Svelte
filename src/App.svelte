@@ -5,6 +5,7 @@
   import AddPollForm from "./components/AddPollForm.svelte";
   import PollList from "./components/PollList.svelte";
   import CurrentItemStore from "./stores/CurrentItemStore";
+  import { onMount } from "svelte";
 </script>
 
 <Header />
